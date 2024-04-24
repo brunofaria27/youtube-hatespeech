@@ -4,7 +4,7 @@ public class MainComment {
     private String commentId;
     private String comment;
     private String author;
-    private int likeCount;
+    private long likeCount;
     private boolean isReply;
 
     public String getCommentId() {
@@ -30,12 +30,13 @@ public class MainComment {
     public void setAuthor(String author) {
         this.author = author;
     }
-    public int getLikeCount() {
+    
+    public long getLikeCount() {
         return likeCount;
     }
 
-    public void setLikeCount(int likeCount) {
-        this.likeCount = likeCount;
+    public void setLikeCount(Long long1) {
+        this.likeCount = long1;
     }
 
     public boolean isReply() {
@@ -44,5 +45,16 @@ public class MainComment {
 
     public void setReply(boolean isReply) {
         this.isReply = isReply;
+    }
+
+    @Override
+    public String toString() {
+        return "MainComment{" +
+                "commentId='" + commentId + '\'' +
+                ", comment='" + comment + '\'' +
+                ", author='" + author + '\'' +
+                ", likeCount=" + likeCount +
+                ", isReply=" + isReply +
+                '}';
     }
 }

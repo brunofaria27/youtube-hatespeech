@@ -10,4 +10,16 @@ public class ReplyComment extends MainComment {
     public void setParentMainCommentId(String parentMainCommentId) {
         this.parentMainCommentId = parentMainCommentId;
     }
+
+    @Override
+    public String toString() {
+        return "ReplyComment{" +
+                "parentMainCommentId='" + parentMainCommentId + '\'' +
+                ", commentId='" + getCommentId() + '\'' +
+                ", comment='" + getComment() + '\'' +
+                ", author='" + getAuthor() + '\'' +
+                ", likeCount=" + getLikeCount() +
+                ", isReply=" + isReply() +
+                '}';
+    }
 }

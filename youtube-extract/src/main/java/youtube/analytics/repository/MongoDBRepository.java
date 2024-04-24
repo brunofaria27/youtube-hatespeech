@@ -1,36 +1,43 @@
 package youtube.analytics.repository;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
 
-/* https://www.mongodb.com/docs/drivers/java/sync/current/quick-start/ */
 public class MongoDBRepository {
+    private String URI;
+    private static final String database = "youtube-hatespeech";
     private MongoClient mongoClient;
-    private MongoCollection<Document> userCollection;
-    private MongoCollection<Document> commentCollection;
+    private MongoDatabase mongoDatabase;
 
-    public MongoClient getMongoClient() {
-        return mongoClient;
+    public MongoDBRepository() {
+        Dotenv dotenv = Dotenv.configure().load();
+        URI = dotenv.get("URI");
     }
 
-    public void setMongoClient(MongoClient mongoClient) {
-        this.mongoClient = mongoClient;
+    public String getURI() {
+        return URI;
     }
 
-    public MongoCollection<Document> getUserCollection() {
-        return userCollection;
+    public static String getDatabase() {
+        return database;
     }
 
-    public void setUserCollection(MongoCollection<Document> userCollection) {
-        this.userCollection = userCollection;
+    public void connect() {
+        mongoClient = MongoClients.create(getURI());
+        mongoDatabase = mongoClient.getDatabase(getDatabase());
     }
 
-    public MongoCollection<Document> getCommentCollection() {
-        return commentCollection;
+    public void disconnect() {
+        if (mongoClient != null) {
+            mongoClient.close();
+        }
     }
 
-    public void setCommentCollection(MongoCollection<Document> commentCollection) {
-        this.commentCollection = commentCollection;
+    public MongoCollection<Document> getCollectionComments() {
+        return mongoDatabase.getCollection("comments");
     }
 }
