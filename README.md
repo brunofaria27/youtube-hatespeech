@@ -26,3 +26,12 @@ Este projeto tem como objetivo detectar discurso de ódio em podcasts do YouTube
 
 ## Licença
 Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](https://github.com/brunofaria27/youtube-hatespeech/blob/main/LICENSE) para mais detalhes.
+
+## Rodar código
+```bash
+python -m venv myenv
+myenv\Scripts\activate
+python.exe -m pip install --upgrade pip
+pip install -r requirements.txt
+python -m spacy download en_core_web_sm
+```
