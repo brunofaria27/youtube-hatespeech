@@ -1,19 +1,19 @@
 import json
 import time
 import pandas as pd
-from transformers import pipeline, AutoTokenizer
+from transformers import pipeline, AutoTokenizer, AutoModelForSequenceClassification
+import torch
 
-# Define o pipeline de detecção de discurso de ódio
-model_name = "facebook/roberta-hate-speech-dynabench-r4-target"
+model_name = "Hate-speech-CNERG/bert-base-uncased-hatexplain"
+device = 0 if torch.cuda.is_available() else -1  # 0 para GPU, -1 para CPU
 tokenizer = AutoTokenizer.from_pretrained(model_name)
-classifier = pipeline('text-classification', model=model_name, tokenizer=tokenizer)
+model = AutoModelForSequenceClassification.from_pretrained(model_name)
+classifier = pipeline('text-classification', model=model, tokenizer=tokenizer, device=device)
 
-# Função para classificar um lote de comentários
 def classify_comments_batch(comments):
     results = classifier(comments)
     return [result['label'] for result in results]
 
-# Função para processar e salvar resultados em CSV
 def process_files(input_files):
     for input_file in input_files:
         print(f"Processing file: {input_file}")
@@ -23,7 +23,9 @@ def process_files(input_files):
             data = json.load(file)
 
         comments_data = []
-        processed_comments = set()  # Para rastrear comentários processados
+        processed_comments = set()
+
+        print(f"Number of comments: {len(data)}")
 
         for entry in data:
             commentId = entry.get('commentId', '')
@@ -32,7 +34,6 @@ def process_files(input_files):
             likeCount = entry.get('likeCount', 0)
             isReply = entry.get('isReply', False)
             
-            # Converter likeCount para um número
             if isinstance(likeCount, dict):
                 likeCount = likeCount.get('$numberLong', 0)
             try:
@@ -40,14 +41,11 @@ def process_files(input_files):
             except ValueError:
                 likeCount = 0
             
-            # Garantir que o comentário seja único
             if comment not in processed_comments:
                 processed_comments.add(comment)
                 
-                # Classificar comentário individualmente
                 classifications = classify_comments_batch([comment])
-
-                # Adicionar resultados a uma lista
+                
                 comments_data.append({
                     'file_name': input_file,
                     'commentId': commentId,
@@ -58,16 +56,14 @@ def process_files(input_files):
                     'prediction': classifications[0]
                 })
 
-                # Salvar dados em CSV incrementalmente
                 df = pd.DataFrame(comments_data)
-                csv_file = input_file.replace('.json', '_processed.csv')
+                csv_file = input_file.replace('.json', '_prediction.csv')
                 df.to_csv(csv_file, index=False)
-                print(f"Processed and saved comment to {csv_file}")
+                print(f"Processed and saved comment {commentId} to {csv_file}")
 
-        print(f"File {input_file} processed in {time.time() - start_time:.2f} seconds.")
+        elapsed_time = time.time() - start_time
+        print(f"File {input_file} processed in {elapsed_time:.2f} seconds.")
 
-# Arquivos de entrada a serem processados
-input_files = ['andrew_processed_3.json', 'impaulsive_processed_3.json', 'lex_processed_3.json', 'comments_processed_3.json']
+input_files = ['processed/comments_processed.json'] # , 'processed/impaulsive_processed.json', 'processed/lex_processed.json', 'processed/comments_processed.json']
 
-# Processar arquivos e salvar resultados
 process_files(input_files)
