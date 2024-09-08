@@ -21,7 +21,6 @@ Este projeto tem como objetivo detectar discurso de ódio em podcasts do YouTube
 ## Estrutura do projeto
 - `youtube-extract`: projeto Java que extrai comentários do YouTube e armazena no MongoDB.
 - `analytics`: scripts em Python utilizando IA para ver a quantidade de discurso de ódio.
-    - `models`: modelos do algoritmo.
     - `processing`: pré-processamento dos dados.
 
 ## Licença
