@@ -1,7 +1,7 @@
 import csv
 
 input_file = 'processed/andrew_processed_prediction.csv'
-output_file = 'processed/hate_comments.csv'
+output_file = 'processed/hate_comments_andrew.csv'
 
 with open(input_file, mode='r', encoding='utf-8') as csv_file:
     csv_reader = csv.DictReader(csv_file)

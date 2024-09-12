@@ -58,12 +58,12 @@ def process_files(input_files):
 
                 df = pd.DataFrame(comments_data)
                 csv_file = input_file.replace('.json', '_prediction.csv')
-                df.to_csv(csv_file, index=False)
+                df.to_csv(csv_file, index=False) 
                 print(f"Processed and saved comment {commentId} to {csv_file}")
 
         elapsed_time = time.time() - start_time
         print(f"File {input_file} processed in {elapsed_time:.2f} seconds.")
-
-input_files = ['processed/comments_processed.json'] # , 'processed/impaulsive_processed.json', 'processed/lex_processed.json', 'processed/comments_processed.json']
+                                                                                           #                                     X
+input_files = ['processed/json/lex_processed.json'] # , 'processed/json/andrew_processed.json', 'processed/json/impaulsive_processed.json', 'processed/json/comments_processed.json']
 
 process_files(input_files)

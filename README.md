@@ -34,3 +34,15 @@ python.exe -m pip install --upgrade pip
 pip install -r requirements.txt
 python -m spacy download en_core_web_sm
 ```
+
+https://maartengr.github.io/BERTopic/index.html#installation
+
+- Rodar BERTopic e WordCloud (saida BERTopic) para todos comentarios + reply de cada podcast - OK
+- Rodar BERTopic e WordCloud (saida BERTopic) para todos comentarios de hate + reply de cada podcast - OK
+- Proporção de quantos replies para cada comnetario - TODOS
+- Proporção de quantos replies para cada comnetario - HATE
+- Proporcao de quantidade de hates em todos os comentarios de reply
+
+- O hate é para a pessoa/convidado ou para a ideia da pessoa/convidado?
+
+Levando em consideracao os comentarios nao vem na ordem fica complicado de achar o momento do video o que vamos fazer é se o hate esta relacionado aos topicos principais do video
