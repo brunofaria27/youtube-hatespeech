@@ -1,3 +1,6 @@
+analytics/data/*
+analytics/processed/*
+
 .env
 
 # Created by https://www.toptal.com/developers/gitignore/api/java

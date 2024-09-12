@@ -55,7 +55,7 @@ for file in files_all:
 
     filename = os.path.basename(file)
     file_prefix = filename.split('_')[0]
-    output_image_path = f'graphs/wordcloud_{file_prefix}_comments.png'
+    output_image_path = f'graphs/word_cloud/wordcloud_{file_prefix}_comments.png'
     # output_image_path = f'graphs/wordcloud_{file_prefix}_comments_hate.png' # Use this one if the list is hate
     wordcloud.to_file(output_image_path)
 
