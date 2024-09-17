@@ -1,13 +1,15 @@
 import os
-import nltk
 import pandas as pd
 import matplotlib.pyplot as plt
-
+import nltk
 from wordcloud import WordCloud, STOPWORDS
 from nltk.corpus import stopwords
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.decomposition import LatentDirichletAllocation
 
 nltk.download('stopwords')
 
+# Defina a lista de arquivos
 files_all = [
     'processed/andrew_processed_prediction.csv',
     'processed/impaulsive_processed_prediction.csv',
@@ -20,43 +22,49 @@ files_hate = [
     'processed/lex_hate_comments.csv'
 ]
 
-for file in files_all:
+# Função para exibir os tópicos
+def display_topics(model, feature_names, no_top_words):
+    for topic_idx, topic in enumerate(model.components_):
+        print(f"Tópico {topic_idx+1}:")
+        print(" ".join([feature_names[i] for i in topic.argsort()[:-no_top_words - 1:-1]]))
+
+for file in files_hate:
     df = pd.read_csv(file)
     df['comment'] = df['comment'].astype(str).fillna('')
 
-    all_comments = ' '.join(df['comment'].tolist())
+    all_comments = df['comment'].tolist()
+
+    # Definindo stopwords personalizadas
     custom_stopwords = set(STOPWORDS).union(set(stopwords.words('english')))
-
-    additional_stopwords = {'hes', 'seem', 'listen', 'href', 'gonna', 'go', 'yeah', 'get',
-                            'one', 'would', 'could', 'like', 'also', 'really', 'even', 'said',
-                            'say', 'just', 'see', 'make', 'want', 'know', 'think', 'going',
-                            'said', 'says', 'look', 'good', 'bad', 'dont', 'did', 'cant', 'didnt',
-                            'isnt', 'wasnt', 'hasnt', 'wont', 'will', 'should', 'can', 'might',
-                            'should', 'much', 'many', 'people', 'thing', 'things', 'way', 'Thank',
-                            'video', 'back', 'eat', 'may', 'Destiny', 'goggin', 'youre', 'love', 'let',
-                            'got', 'David goggin', 'Huberman', 'David', 'man', 'goggins', 'need', 'work',
-                            'time', 'life', 'take', 'thats', 'year', 'podcast', 'start', 'lot', 'without',
-                            'old', 'put', 'come', 'dude', 'guy', 'take', 'little', 'Lets', 'food', 'hard',
-                            'person', 'give', 'something', 'everything', 'arent', 'never', 'bro', 'tell',
-                            'high', 'years', 'better', 'system', 'great', 'real', 'live', 'become', 'day',
-                            'trying', 'makes', 'doesnt', 'already', 'Theres', 'Ive', 'shes', 'Thanks',
-                            'George', 'Logan', 'Logan Paul', 'Paul', 'Mike', 'Mark', 'episode', 'John Cena', 'John',
-                            'Jeffree', 'Lex', 'Andrew', 'Lana', 'Gena', 'Jimmy', 'Beast', 'Cena', 'lol', 'yawn', 'guys',
-                            'watch', 'talk', 'tear'}
+    
+    additional_stopwords = {
+        'hes', 'seem', 'listen', 'href', 'gonna', 'go', 'yeah', 'get', 'one', 'would', 'could', 'like', 
+        'also', 'really', 'even', 'said', 'say', 'just', 'see', 'make', 'want', 'know', 'think', 'going', 
+        'said', 'says', 'look', 'good', 'bad', 'dont', 'did', 'cant', 'didnt', 'isnt', 'wasnt', 'hasnt', 
+        'wont', 'will', 'should', 'can', 'might', 'should', 'much', 'many', 'people', 'thing', 'things', 
+        'way', 'Thank', 'video', 'back', 'eat', 'may', 'Destiny', 'goggin', 'youre', 'love', 'let', 'got', 
+        'David goggin', 'Huberman', 'David', 'man', 'goggins', 'need', 'work', 'time', 'life', 'take', 
+        'thats', 'year', 'podcast', 'start', 'lot', 'without', 'old', 'put', 'come', 'dude', 'guy', 'take', 
+        'little', 'Lets', 'food', 'hard', 'person', 'give', 'something', 'everything', 'arent', 'never', 'bro', 
+        'tell', 'high', 'years', 'better', 'system', 'great', 'real', 'live', 'become', 'day', 'trying', 
+        'makes', 'doesnt', 'already', 'Theres', 'Ive', 'shes', 'Thanks', 'George', 'Logan', 'Logan Paul', 
+        'Paul', 'Mike', 'Mark', 'episode', 'John Cena', 'John', 'Jeffree', 'Lex', 'Andrew', 'Lana', 'Gena', 
+        'Jimmy', 'Beast', 'Cena', 'lol', 'yawn', 'guys', 'watch', 'talk', 'tear'
+    }
     custom_stopwords = custom_stopwords.union(additional_stopwords)
+    custom_stopwords = list(custom_stopwords)
 
-    wordcloud = WordCloud(
-        width=1200,
-        height=600,
-        background_color='white',
-        stopwords=custom_stopwords,
-        min_word_length=3
-    ).generate(all_comments)
+    # Vetorização dos comentários
+    vectorizer = CountVectorizer(stop_words=custom_stopwords, min_df=5)
+    comments_vectorized = vectorizer.fit_transform(all_comments)
 
-    filename = os.path.basename(file)
-    file_prefix = filename.split('_')[0]
-    output_image_path = f'graphs/word_cloud/wordcloud_{file_prefix}_comments.png'
-    # output_image_path = f'graphs/wordcloud_{file_prefix}_comments_hate.png' # Use this one if the list is hate
-    wordcloud.to_file(output_image_path)
+    # Ajustar o modelo LDA
+    lda = LatentDirichletAllocation(n_components=5, random_state=42)  # Defina o número de tópicos (n_components)
+    lda.fit(comments_vectorized)
 
-    print(f"Imagem salva como {output_image_path}")
+    # Exibir os tópicos
+    no_top_words = 10
+    feature_names = vectorizer.get_feature_names_out()
+    print(f"Tópicos para o arquivo {file}:")
+    display_topics(lda, feature_names, no_top_words)
+    print("\n")
