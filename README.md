@@ -1,14 +1,16 @@
-# Detecção de Discurso de Ódio em Podcasts do YouTube
+# Detecção de Discurso de Ódio em Podcasts do YouTube 🎧
 
-## Descrição
+## Descrição 📜
 Este projeto tem como objetivo detectar discurso de ódio em podcasts do YouTube utilizando abordagens de inteligência artificial. O trabalho é parte do meu TCC para a graduação em Ciência da Computação.
 
 ## Tabela de Conteúdos
-- [Instalação](#instalação)
-- [Estrutura do Projeto](#estrutura-do-projeto)
-- [Licença](#licença)
+- [Instalação](#instalação-⚙️)
+- [Estrutura do Projeto](#estrutura-do-projeto-🗂️)
+- [Primeira Análise de Tópicos](#primeira-análise-de-tópicos-🔍)
+- [Licença](#licença-📝)
+- [Rodar Código](#rodar-código-💻)
 
-## Instalação
+## Instalação ⚙️
 1. Clone o repositório:
     ```bash
     $ git clone https://github.com/brunofaria27/youtube-hatespeech.git
@@ -18,28 +20,17 @@ Este projeto tem como objetivo detectar discurso de ódio em podcasts do YouTube
     $ cd youtube-hatespeech
     ```
 
-## Estrutura do projeto
+## Estrutura do Projeto 🗂️
 - `youtube-extract`: projeto Java que extrai comentários do YouTube e armazena no MongoDB.
-- `analytics`: scripts em Python utilizando IA para ver a quantidade de discurso de ódio.
-    - `processing`: pré-processamento dos dados.
+- `analytics`: scripts em Python utilizando IA para ver a quantidade de discurso de ódio e analise dos mesmos.
 
-## Licença
-Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](https://github.com/brunofaria27/youtube-hatespeech/blob/main/LICENSE) para mais detalhes.
+## Primeira análise de tópicos 🔍
 
-## Rodar código
-```bash
-python -m venv myenv
-myenv\Scripts\activate
-python.exe -m pip install --upgrade pip
-pip install -r requirements.txt
-python -m spacy download en_core_web_sm
+<details>
+<summary>Todos os comentários</summary>
+
+**Tópicos para o podcast de Andrew Huberman:**
 ```
-
-## Primeira analise de tópicos
-
-Todos os comentários:
-```
-Tópicos para o arquivo processed/andrew_processed_prediction.csv:
 Tópico 1:
     thank huberman thanks andrew dr information best amazing david us
 Tópico 2:
@@ -52,8 +43,8 @@ Tópico 5:
     im drink drinking ive alcohol days feel fasting eating week
 ```
 
+**Tópicos para o podcast de The Joe Rogan Experience:**
 ```
-Tópicos para o arquivo processed/impaulsive_processed_prediction.csv:
 Tópico 1:
     logan mark talking prime please wow awesome funny porn pod
 Tópico 2:
@@ -66,8 +57,8 @@ Tópico 5:
     mike lana logan happens fucking cry fuck im annoying shit
 ```
 
+**Tópicos para o podcast de Lex Fridman:**
 ```
-Tópicos para o arquivo processed/lex_processed_prediction.csv:
 Tópico 1:
     lex im interview thank voice jeff ive human bezos conversation
 Tópico 2:
@@ -79,10 +70,13 @@ Tópico 4:
 Tópico 5:
     us war ukraine russia putin nato nuclear world power russian
 ```
+</details>
 
-Comentários com hate:
+<details>
+<summary>Comentários com hate 😡</summary>
+
+**Tópicos para o podcast de Andrew Huberman:**
 ```
-Tópicos para o arquivo processed/andrew_hate_comments.csv:
 Tópico 1:
     fat alcohol david point us another science eating level stop
 Tópico 2:
@@ -95,8 +89,8 @@ Tópico 5:
     huberman im bullshit dr right best whole new feel world
 ```
 
+**Tópicos para o podcast de The Joe Rogan Experience:**
 ```
-Tópicos para o arquivo processed/impaulsive_hate_comments.csv:
 Tópico 1:
     bitch cuss beast mrbeast im mr dudes mikes whore funny
 Tópico 2:
@@ -109,8 +103,8 @@ Tópico 5:
     logan jacksepticeye still paul next tho boy rich dumbass gets
 ```
 
+**Tópicos para o podcast de Lex Fridman:**
 ```
-Tópicos para o arquivo processed/lex_hate_comments.csv:
 Tópico 1:
     destiny ben leftist jew shapiro im cuck another liberal brain
 Tópico 2:
@@ -121,4 +115,17 @@ Tópico 4:
     lex israel jews hamas world palestinians bezos human rich arabs
 Tópico 5:
     destiny ben debate shapiro moron right two liberal trump shit
+```
+</details>
+
+## Licença 📝
+Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](https://github.com/brunofaria27/youtube-hatespeech/blob/main/LICENSE) para mais detalhes.
+
+## Rodar código 💻
+```bash
+python -m venv myenv
+myenv\Scripts\activate
+python.exe -m pip install --upgrade pip
+pip install -r requirements.txt
+python -m spacy download en_core_web_sm
 ```

@@ -1,15 +1,13 @@
-import os
-import pandas as pd
-import matplotlib.pyplot as plt
 import nltk
-from wordcloud import WordCloud, STOPWORDS
+import pandas as pd
+
+from wordcloud import STOPWORDS
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.decomposition import LatentDirichletAllocation
 
 nltk.download('stopwords')
 
-# Defina a lista de arquivos
 files_all = [
     'processed/andrew_processed_prediction.csv',
     'processed/impaulsive_processed_prediction.csv',
@@ -22,7 +20,6 @@ files_hate = [
     'processed/lex_hate_comments.csv'
 ]
 
-# Função para exibir os tópicos
 def display_topics(model, feature_names, no_top_words):
     for topic_idx, topic in enumerate(model.components_):
         print(f"Tópico {topic_idx+1}:")
@@ -34,7 +31,6 @@ for file in files_hate:
 
     all_comments = df['comment'].tolist()
 
-    # Definindo stopwords personalizadas
     custom_stopwords = set(STOPWORDS).union(set(stopwords.words('english')))
     
     additional_stopwords = {
@@ -54,15 +50,12 @@ for file in files_hate:
     custom_stopwords = custom_stopwords.union(additional_stopwords)
     custom_stopwords = list(custom_stopwords)
 
-    # Vetorização dos comentários
     vectorizer = CountVectorizer(stop_words=custom_stopwords, min_df=5)
     comments_vectorized = vectorizer.fit_transform(all_comments)
 
-    # Ajustar o modelo LDA
-    lda = LatentDirichletAllocation(n_components=5, random_state=42)  # Defina o número de tópicos (n_components)
+    lda = LatentDirichletAllocation(n_components=5, random_state=42)
     lda.fit(comments_vectorized)
 
-    # Exibir os tópicos
     no_top_words = 10
     feature_names = vectorizer.get_feature_names_out()
     print(f"Tópicos para o arquivo {file}:")
